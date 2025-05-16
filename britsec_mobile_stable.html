@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BritSec AI | Cybersecurity for a Quantum Future</title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+      text-align: center;
+    }
+    header {
+      background: linear-gradient(rgba(15,15,15,0.85), rgba(15,15,15,0.85)),
+                  url('https://placehold.co/1200x400?text=Data+Centre+UK&font=source-sans-pro') no-repeat center center/cover;
+      padding: 60px 20px;
+      color: #00ffcc;
+    }
+    header h1 {
+      font-size: 2.2em;
+    }
+    .tagline {
+      font-size: 1.1em;
+      margin-top: 10px;
+    }
+    section {
+      padding: 30px 15px;
+    }
+    .cta, button {
+      background: #00ffcc;
+      color: #000;
+      display: inline-block;
+      padding: 12px 20px;
+      font-size: 1em;
+      margin-top: 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+    }
+    input[type="email"] {
+      padding: 10px;
+      width: 90%;
+      max-width: 300px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    #wallet-status, #bsa-balance {
+      margin-top: 20px;
+      font-size: 1em;
+      color: #00ffcc;
+    }
+    .img-block {
+      width: 100%;
+      max-width: 600px;
+      height: auto;
+      margin-top: 20px;
+      border: 2px solid #00ffcc;
+      border-radius: 8px;
+    }
+    footer {
+      background: #121212;
+      text-align: center;
+      padding: 15px;
+      font-size: 0.9em;
+      border-top: 1px solid #00ffcc;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>BritSec AI</h1>
+    <div class="tagline">Quantum-Proof Cybersecurity. Made in Britain.</div>
+  </header>
+
+  <section>
+    <h2>Connect Wallet & View Balance</h2>
+    <button onclick="connectWallet()">Connect Wallet</button>
+    <div id="wallet-status"></div>
+    <div id="bsa-balance"></div>
+  </section>
+
+  <section>
+    <h2>Secure. Defend. Advance.</h2>
+    <p>Building the UK’s most trusted AI-driven cybersecurity ecosystem for a post-quantum world.</p>
+    <img src="https://placehold.co/600x400?text=British+Datacentre" class="img-block" alt="Data Center">
+  </section>
+
+  <section>
+    <h2>BritSec Token (BSA)</h2>
+    <p>Our utility token powers secure AI operations, staking rewards, and encrypted network access.</p>
+    <img src="https://placehold.co/600x400?text=Token+Security" class="img-block" alt="Crypto Security">
+    <a href="mailto:hr76.hr137@gmail.com?subject=Token%20Access" class="cta">Join Token Early Access</a>
+  </section>
+
+  <section>
+    <h2>Stay Updated</h2>
+    <p>Join the mission and stay up to date with our progress.</p>
+    <form action="https://formsubmit.co/hr76.hr137@gmail.com" method="POST">
+      <input type="email" name="email" placeholder="Your email address" required>
+      <button type="submit">Join the Mission</button>
+    </form>
+  </section>
+
+  <footer>
+    &copy; 2025 BritSec AI. All rights reserved. | Based in the UK
+  </footer>
+
+  <script>
+    const tokenAddress = "0x45FAD89fCfa9F8e07B327f7D94f25d5021cB63C6";
+    const tokenABI = [
+      "function balanceOf(address owner) view returns (uint256)",
+      "function decimals() view returns (uint8)",
+      "function symbol() view returns (string)"
+    ];
+
+    async function connectWallet() {
+      if (window.ethereum) {
+        try {
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          await provider.send("eth_requestAccounts", []);
+          const signer = provider.getSigner();
+          const address = await signer.getAddress();
+          document.getElementById("wallet-status").innerText = "Connected: " + address;
+
+          const contract = new ethers.Contract(tokenAddress, tokenABI, provider);
+          const rawBalance = await contract.balanceOf(address);
+          const decimals = await contract.decimals();
+          const symbol = await contract.symbol();
+
+          const balance = ethers.utils.formatUnits(rawBalance, decimals);
+          document.getElementById("bsa-balance").innerText = `Your BSA Balance: ${balance} ${symbol}`;
+        } catch (error) {
+          document.getElementById("wallet-status").innerText = "Connection refused.";
+        }
+      } else {
+        document.getElementById("wallet-status").innerText = "MetaMask not detected.";
+      }
+    }
+  </script>
+
+</body>
+</html>
